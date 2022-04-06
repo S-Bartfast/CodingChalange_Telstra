@@ -2,7 +2,9 @@ package inc.slartibartfast.codechallange_telstra
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import inc.slartibartfast.codechallange_telstra.databinding.TileBinding
 
 class TileAdapter : RecyclerView.Adapter<TileAdapter.TileViewHolder>() {
@@ -23,6 +25,18 @@ class TileAdapter : RecyclerView.Adapter<TileAdapter.TileViewHolder>() {
 
         fun bind(data: TileData?) {
             binding.model = data
+
+            val imageView = binding.image
+
+            Glide
+                .with(binding.root.context)
+                .load(data?.imageHref?.replace("http://", "https://"))
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(imageView)
+
+            binding.root.setOnClickListener {
+                Toast.makeText(binding.root.context, "${data?.title} clicked", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

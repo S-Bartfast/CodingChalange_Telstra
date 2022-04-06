@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import inc.slartibartfast.codechallange_telstra.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
-    val recyclerAdapter = TileAdapter()
+    private val recyclerAdapter = TileAdapter()
     private lateinit var viewMode: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
