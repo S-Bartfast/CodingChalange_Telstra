@@ -1,5 +1,6 @@
-package inc.slartibartfast.codechallange_telstra
+package inc.slartibartfast.codechallange_telstra.retrofit
 
+import inc.slartibartfast.codechallange_telstra.CountryData
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
