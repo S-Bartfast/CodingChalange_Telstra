@@ -2,7 +2,6 @@ package inc.slartibartfast.codechallange_telstra
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,10 +32,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initSwipeContainer() {
         findViewById<SwipeRefreshLayout>(R.id.swipeContainer).apply {
-            viewMode.makeApiCall(this)
+
+            val failTest = true
+            viewMode.makeApiCall(this, failTest)
 
             setOnRefreshListener {
-                viewMode.makeApiCall(this)
+                viewMode.makeApiCall(this, !failTest)
             }
         }
     }

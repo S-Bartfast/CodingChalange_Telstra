@@ -6,21 +6,21 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
-interface ApiInterface {
-    @GET("facts.json")
+interface ApiFail {
+    @GET("NoSuchFile.json")
     fun getData() : Call<CountryData>
 
     companion object {
 
-        var BASE_URL = "https://dl.dropboxusercontent.com/s/2iodh4vg0eortkl/"
+        val BASE_URL = "https://NoSuchUrl/"
 
-        fun create() : ApiInterface {
+        fun create() : ApiDropbox {
 
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(BASE_URL)
                 .build()
-            return retrofit.create(ApiInterface::class.java)
+            return retrofit.create(ApiDropbox::class.java)
         }
     }
 }

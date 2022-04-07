@@ -22,7 +22,7 @@ class TileAdapter : RecyclerView.Adapter<TileAdapter.TileViewHolder>() {
     override fun getItemCount() = tileList.size
 
     fun setTileItems(items: List<TileData>) {
-        if (tileList.isEmpty()) { tileList.clear() }
+        if (tileList.isNotEmpty()) { tileList.clear() }
         tileList.addAll(items)
     }
 
