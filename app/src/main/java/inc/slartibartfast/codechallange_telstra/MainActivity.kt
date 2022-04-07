@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import inc.slartibartfast.codechallange_telstra.retrofit.ApiInterface
 import inc.slartibartfast.codechallange_telstra.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
     private val recyclerAdapter = TileAdapter()
     private lateinit var viewMode: MainActivityViewModel
+    private var useTestData = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +25,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         viewMode = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewMode.apiInterface = if(useTestData)
+            ApiInterface.createWithInterceptor(this)
+        else
+            ApiInterface.create()
         viewMode.liveCountryData.observe(this) {
             title = it.title
             recyclerAdapter.setTileItems(it.rows)
@@ -32,12 +38,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initSwipeContainer() {
         findViewById<SwipeRefreshLayout>(R.id.swipeContainer).apply {
-
-            val failTest = true
-            viewMode.makeApiCall(this, failTest)
+            viewMode.makeApiCall(this)
 
             setOnRefreshListener {
-                viewMode.makeApiCall(this, !failTest)
+                viewMode.makeApiCall(this)
             }
         }
     }
