@@ -2,9 +2,11 @@ package inc.slartibartfast.codechallange_telstra
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import inc.slartibartfast.codechallange_telstra.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -15,8 +17,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initRecyclerView()
         initViewModel()
+        initSwipeContainer()
+        initRecyclerView()
+    }
+
+    private fun initViewModel() {
+        viewMode = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewMode.liveCountryData.observe(this) {
+            title = it.title
+            recyclerAdapter.setTileItems(it.rows)
+            recyclerAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun initSwipeContainer() {
+        findViewById<SwipeRefreshLayout>(R.id.swipeContainer).apply {
+            viewMode.makeApiCall(this)
+
+            setOnRefreshListener {
+                viewMode.makeApiCall(this)
+            }
+        }
     }
 
     private fun initRecyclerView() {
@@ -24,16 +46,5 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = recyclerAdapter
         }
-    }
-
-    private fun initViewModel() {
-        viewMode = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-        viewMode.liveCountryData.observe(this) {
-            title = it.title
-            recyclerAdapter.tileList = it.rows
-            recyclerAdapter.notifyDataSetChanged()
-        }
-
-        viewMode.makeApiCall()
     }
 }
