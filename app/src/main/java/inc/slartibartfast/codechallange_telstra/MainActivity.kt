@@ -2,6 +2,8 @@ package inc.slartibartfast.codechallange_telstra
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +32,17 @@ class MainActivity : AppCompatActivity() {
             title = it.title
             recyclerAdapter.setTileItems(it.rows)
             recyclerAdapter.notifyDataSetChanged()
+
+            val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+            val noData = findViewById<TextView>(R.id.noDataMessage)
+
+            if (it.rows.isEmpty()) {
+                recyclerView.visibility = View.GONE
+                noData.visibility = View.VISIBLE
+            } else {
+                recyclerView.visibility = View.VISIBLE
+                noData.visibility = View.GONE
+            }
         }
     }
 
@@ -58,5 +71,4 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.makeApiCall(refreshLayout)
     }
-
 }

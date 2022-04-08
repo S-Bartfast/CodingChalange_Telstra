@@ -30,12 +30,13 @@ class TileAdapter : RecyclerView.Adapter<TileAdapter.TileViewHolder>() {
 
         fun bind(data: TileData?) {
             binding.model = data
+            binding.executePendingBindings() // This is required here for Espresso test to scroll properly!
 
             val imageView = binding.image
 
             Glide
                 .with(binding.root.context)
-                .load(data?.imageHref?.replace("http://", "https://"))
+                .load(data?.imageHref?.replace("http://", "https://")) // Images fail to load with "http://" address
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(imageView)
 
