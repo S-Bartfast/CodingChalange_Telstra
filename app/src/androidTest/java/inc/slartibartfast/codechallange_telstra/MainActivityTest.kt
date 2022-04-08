@@ -1,18 +1,37 @@
 package inc.slartibartfast.codechallange_telstra
 
 import android.view.View
+import androidx.test.espresso.*
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.AssertionError
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class MainActivityTest{
+    private fun onViewCheckAssertionWithRetries(matcher: Matcher<View>, assertion: ViewAssertion, retries: Int = 100, delay: Long = 100): ViewInteraction {
+        repeat(retries) { attempt ->
+            try {
+                return onView(matcher).check(assertion)
+            } catch (e: NoMatchingViewException) {
+                if (attempt >= retries) {
+                    throw e
+                } else {
+                    Thread.sleep(delay)
+                }
+            }
+        }
+
+        throw AssertionError("Failed to fine match for $matcher")
+    }
+
     @get: Rule
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
@@ -31,7 +50,6 @@ class MainActivityTest{
 
     @Test
     fun test_checkTitle() {
-        Thread.sleep(3000)
-        onView(withText("About Canada (refresh 0)")).check(matches(isDisplayed()))
+        onViewCheckAssertionWithRetries(withText("About Canada (refresh 0)"), matches(isDisplayed()))
     }
 }
