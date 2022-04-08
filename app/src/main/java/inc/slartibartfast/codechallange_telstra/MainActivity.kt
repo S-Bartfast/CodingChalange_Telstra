@@ -11,8 +11,8 @@ import inc.slartibartfast.codechallange_telstra.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
     private val recyclerAdapter = TileAdapter()
-    private lateinit var viewMode: MainActivityViewModel
-    private var useTestData = true
+    private lateinit var viewModel: MainActivityViewModel
+    private lateinit var refreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,16 +20,13 @@ class MainActivity : AppCompatActivity() {
 
         initViewModel()
         initSwipeContainer()
+        setApiInterface()
         initRecyclerView()
     }
 
     private fun initViewModel() {
-        viewMode = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-        viewMode.apiInterface = if(useTestData)
-            ApiInterface.createWithInterceptor(this)
-        else
-            ApiInterface.create()
-        viewMode.liveCountryData.observe(this) {
+        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel.liveCountryData.observe(this) {
             title = it.title
             recyclerAdapter.setTileItems(it.rows)
             recyclerAdapter.notifyDataSetChanged()
@@ -38,10 +35,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initSwipeContainer() {
         findViewById<SwipeRefreshLayout>(R.id.swipeContainer).apply {
-            viewMode.makeApiCall(this)
+            refreshLayout = this
 
             setOnRefreshListener {
-                viewMode.makeApiCall(this)
+                viewModel.makeApiCall(refreshLayout)
             }
         }
     }
@@ -52,4 +49,14 @@ class MainActivity : AppCompatActivity() {
             adapter = recyclerAdapter
         }
     }
+
+    fun setApiInterface(useTestData: Boolean = false) {
+        viewModel.apiInterface = if(useTestData)
+            ApiInterface.createWithInterceptor(this)
+        else
+            ApiInterface.create()
+
+        viewModel.makeApiCall(refreshLayout)
+    }
+
 }
