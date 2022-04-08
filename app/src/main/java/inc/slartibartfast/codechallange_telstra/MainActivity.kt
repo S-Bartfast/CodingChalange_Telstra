@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity() {
         else
             ApiInterface.create()
 
-        viewModel.makeApiCall(refreshLayout)
+        if (viewModel.liveCountryData.value == null) {
+            viewModel.makeApiCall(refreshLayout)
+        }
     }
 }
