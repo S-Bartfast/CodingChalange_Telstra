@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity() {
 
         initViewModel()
         initSwipeContainer()
-        setApiInterface()
+        //setApiInterface(true) // Uses local test files
+        setApiInterface() // Uses 'DropBox' endpoint
         initRecyclerView()
     }
 
